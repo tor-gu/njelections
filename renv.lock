@@ -184,10 +184,10 @@
     },
     "gert": {
       "Package": "gert",
-      "Version": "1.6.0",
+      "Version": "1.7.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "98c014c4c933f23ea5a0321a4d0b588b",
+      "Hash": "92d17e7b0639cad43d44e75199d4aa64",
       "Requirements": [
         "askpass",
         "credentials",
@@ -243,10 +243,10 @@
     },
     "httr": {
       "Package": "httr",
-      "Version": "1.4.3",
+      "Version": "1.4.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "88d1b310583777edf01ccd1216fb0b2b",
+      "Hash": "57557fac46471f0dbbf44705cc6a5c8c",
       "Requirements": [
         "R6",
         "curl",
@@ -303,12 +303,12 @@
       "Version": "0.1.0",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "tor-gu",
       "RemoteRepo": "njmunicipalities",
       "RemoteRef": "main",
-      "RemoteSha": "04e0a7b5bddbdd2629743a20c4ebc1468895d2d7",
-      "Hash": "14ea0e76e8f58b57914470b39d7cc8d8",
+      "RemoteSha": "ebe12a9f76f9d4ddeb40a5c0df58aaeb6bc4b739",
+      "RemoteHost": "api.github.com",
+      "Hash": "5e007ae622d30f702858cfd8bc5152d4",
       "Requirements": [
         "dplyr"
       ]
