@@ -1,0 +1,15 @@
+Package: njelections
+Type: Package
+Title: NJ Elections
+Version: 0.1.0
+Authors@R: 
+    person("Tor", "Gunston", , "tor.gunston@protonmail.com", role = c("aut", "cre"))
+Description: New Jersey election results from 2004-2021.
+    Includes the results of every statewide general election (President, 
+    Governor and Senate), broken down by municipality.
+License: CC0
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.2.1
