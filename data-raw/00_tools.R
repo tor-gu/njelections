@@ -493,7 +493,7 @@ go <- function(election, year, office, county_table, candidate_table,
   results <- read_from_csv(
     year, county_table, file_name_base_template, county_repair_table,
     column_repair_table) |>
-    mutate(vote = as.integer(vote)) |>
+    mutate(vote = as.integer(vote), year=as.integer(year)) |>
     repair_municipalities(additional_municipal_corrections) |>
     repair_votes(vote_corrections)
 
