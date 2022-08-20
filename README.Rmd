@@ -22,7 +22,7 @@ library(njelections)
 library(kableExtra)
 kbl <- function(tbl, caption) {
   knitr::kable(tbl,
-               caption = caption,
+               caption = NULL,
                format = "html",
                table.attr = "class=\"kable\"")
 }
@@ -32,7 +32,7 @@ kbl <- function(tbl, caption) {
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is a data package for R containing the results of statewide elections in NJ, from 2004 to 2021
+This is a data package for R containing the results of statewide elections in NJ, from 2004 to 2021.
 
 ## Installation
 

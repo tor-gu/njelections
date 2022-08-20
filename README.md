@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 This is a data package for R containing the results of statewide
-elections in NJ, from 2004 to 2021
+elections in NJ, from 2004 to 2021.
 
 ## Installation
 
@@ -39,9 +39,6 @@ organization:
 Table `election_statewide` contains the following columns, which are
 common to all tables in this dataset:
 <table class="kable">
-<caption>
-election_statewide
-</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -152,9 +149,6 @@ There is one row in this table for every `year`, `office`, and
 ##### Example
 
 <table class="kable">
-<caption>
-head(election_statewide), 3
-</caption>
 <thead>
 <tr>
 <th style="text-align:right;">
@@ -246,9 +240,6 @@ Independent
 Table `election_by_county` contains all of the columns in
 `election_statewide`, plus two more:
 <table class="kable">
-<caption>
-Additional fields in election_by_county
-</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -304,9 +295,6 @@ every `candidate` is represented in every `county`.
 ##### Example
 
 <table class="kable">
-<caption>
-head(election_by_county, 3)
-</caption>
 <thead>
 <tr>
 <th style="text-align:right;">
@@ -422,9 +410,6 @@ Democratic
 Table `election_by_municipality` contains all of the columns in
 `election_statewide`, plus three more:
 <table class="kable">
-<caption>
-Additional fields in election_by_municipality
-</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -495,9 +480,6 @@ There is one row in this table for every `year`, `office`, `county`,
 ##### Example
 
 <table class="kable">
-<caption>
-head(election_by_municipality, 3)
-</caption>
 <thead>
 <tr>
 <th style="text-align:right;">
@@ -636,9 +618,6 @@ election for Governor are incorrect, by swapping the results for Trenton
 and Robbinsville for every candidate except Buono. In this package the
 results are corrected:
 <table class="kable">
-<caption>
-Corrections to 2013 Governor election
-</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -892,9 +871,6 @@ hudson_senate_2012 <- election_by_municipality |>
 ```
 
 <table class="kable">
-<caption>
-Hudson County 2012 Senate results
-</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
