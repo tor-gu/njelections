@@ -21,7 +21,7 @@ candidate_table <- tribble(
   "Chuck Baldwin",            "Constitution Party",
   "Cynthia McKinney",         "Green Party",
   "Brian Moore",              "Socialist Party USA",
-  "Jeffrey \"Jeff\" Boss",    "Vote Here",
+  "Jeff Boss",                "Vote Here",
   "Roger Calero",             "Socialist Workers Party",
   "Gloria La Riva",           "Socialism and Liberation",
 )

@@ -14,7 +14,7 @@ candidate_table <- tribble(
   "Jason Scheurer",               "Libertarian Party",
   "J. M. Carter",                 "God We Trust",
   "Daryl Mikell Brooks",          "Poor People's Campaign",
-  "Jeffrey Boss",                 "Boss For Senate",
+  "Jeff Boss",                    "Boss For Senate",
   "Sara J. Lobman",               "Socialist Workers Party",
 )
 
@@ -33,7 +33,7 @@ vote_corrections <- tribble(
   ~county,         ~municipality,            ~candidate,            ~vote,
   "Camden County", "Laurel Springs borough", "J. M. Carter",        0,
   "Camden County", "Laurel Springs borough", "Daryl Mikell Brooks", 1,
-  "Camden County", "Laurel Springs borough", "Jeffrey Boss",        0,
+  "Camden County", "Laurel Springs borough", "Jeff Boss",           0,
   "Camden County", "Laurel Springs borough", "Sara J. Lobman",      5,
 )
 

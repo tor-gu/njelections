@@ -46,9 +46,10 @@ candidates <- election_by_municipality |>
     year == 2005 & candidate == "Wesley K. (Wes) Bell" ~ "Bell",
     year == 2006 & candidate == "Thomas H. Kean, Jr." ~ "Kean",
     year == 2006 & candidate == "J. M. Carter" ~ "J.M. Carter",
-    year == 2008 & candidate == 'Jeffrey "Jeff" Boss' ~ "Boss",
+    year == 2008 & office == "Senate" & candidate == 'Jeff Boss' ~ "Jeffrey Boss",
+    year == 2008 & office == "President" & candidate == 'Jeff Boss' ~ "Boss",
     year == 2012 & candidate == "Ross C. (Rocky) Anderson" ~ "ANDERSON",
-    year == 2016 & candidate == 'Rocky Roque De la Fuente' ~ "FUENTE",
+    year == 2016 & candidate == 'Roque "Rocky" De la Fuente' ~ "FUENTE",
     year == 2020 & candidate == 'Roque "Rocky" De la Fuente' ~ "FUENTE",
     year %in% 2012:2021 ~ str_to_upper(search_name),
     TRUE ~ search_name
@@ -78,7 +79,6 @@ get_vote_totals <- function(page, patterns) {
     mutate(vote=as.integer(str_remove_all(vote, ","))) |>
     mutate(name=str_to_title(name))
 }
-
 
 # Because of a font issue on one page of one PDF (page 1 of the
 # 2016 presidential results), a portion of the page (but not the

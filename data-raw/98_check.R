@@ -157,3 +157,16 @@ if (nrow(municipal_county_delta) > 0) {
   message("Discrepancies between municipal and county totals")
   print(municipal_county_delta)
 }
+
+# Check for NAs
+check_na <- function(table, name) {
+  nas <- table |> filter(if_any(everything(), ~is.na(.)))
+  if (nrow(nas)) {
+    message("NAs found ", name)
+    print(nas)
+  }
+}
+check_na(election_statewide, "statewide")
+check_na(election_by_county, "by county")
+check_na(election_by_municipality, "by municipality")
+
