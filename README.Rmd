@@ -117,7 +117,7 @@ head(election_by_municipality, 3) |> kbl("head(election_by_municipality, 3)")
 The source for this data is the [New Jersey Division of Elections](https://nj.gov/state/elections/index.shtml). The data was derived by scraping the PDFs in the [election results archive](https://nj.gov/state/elections/election-information-results.shtml).
 
 ### Differences between this data set and the official results.
-The official results for Trenton and Robbinsville in the in the 2013 election for Governor are incorrect, by swapping the results for Trenton and Robbinsville for every candidate except Buono. In this package the results are corrected:
+The official results for Trenton and Robbinsville in the in the 2013 election for Governor are incorrect, as they swap the results for Trenton and Robbinsville for every candidate except Buono. In this package the results are corrected:
 ```{r echo=FALSE} 
 tibble::tribble(
   ~Candidate, ~`Official Trenton`, ~`Corrected Trenton`, ~`Official Robbinsville`, ~`Corrected Robbinsville`,
@@ -163,7 +163,7 @@ When a candidate does not have a listed party, the party is recorded as "Indepen
 For every `year`, `office` and `candidate` combination, the vote total across counties exactly matches the vote total in the statewide results:
 ```{r message=FALSE}
 library(dplyr)
-state_county_delta <- election_by_county |>
+election_by_county |>
   group_by(year, type, office, candidate) |>
   summarize(county_vote=sum(vote), .groups="drop") |>
   left_join(election_statewide,

@@ -614,9 +614,9 @@ archive](https://nj.gov/state/elections/election-information-results.shtml).
 ### Differences between this data set and the official results.
 
 The official results for Trenton and Robbinsville in the in the 2013
-election for Governor are incorrect, by swapping the results for Trenton
-and Robbinsville for every candidate except Buono. In this package the
-results are corrected:
+election for Governor are incorrect, as they swap the results for
+Trenton and Robbinsville for every candidate except Buono. In this
+package the results are corrected:
 <table class="kable">
 <thead>
 <tr>
@@ -833,12 +833,15 @@ across counties exactly matches the vote total in the statewide results:
 
 ``` r
 library(dplyr)
-state_county_delta <- election_by_county |>
+election_by_county |>
   group_by(year, type, office, candidate) |>
   summarize(county_vote=sum(vote), .groups="drop") |>
   left_join(election_statewide,
              by=c("year", "type", "office", "candidate")) |>
   filter(vote != county_vote)
+#> # A tibble: 0 × 7
+#> # … with 7 variables: year <int>, type <chr>, office <chr>, candidate <chr>,
+#> #   county_vote <int>, party <chr>, vote <int>
 ```
 
 #### County vs Municipality
