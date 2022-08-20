@@ -12,34 +12,204 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 renv::use(
-  "tor-gu/njmunicipalities"
+  "tor-gu/njmunicipalities",
+  "tor-gu/njelections",
+  "ggplot2"
 )
 ```
-
+```{r echo=FALSE, message=FALSE}
+library(njelections)
+library(kableExtra)
+kbl <- function(tbl, caption) {
+  knitr::kable(tbl,
+               caption = caption,
+               format = "html",
+               table.attr = "class=\"kable\"")
+}
+```
 # njelections
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is a data package for R containing the results of statewide elections in NJ, from 2004 to 2021.
+This is a data package for R containing the results of statewide elections in NJ, from 2004 to 2021
 
 ## Installation
 
-You can install the development version of njelections like so:
+You can install the development version of `njelections` like so:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("tor-gu/njelections")
 ```
+## Dataset Overview
+This package contains the results of statewide general elections for three offices:
 
-## Example
+* New Jersey Governor
+* US Senate
+* US President
 
-```{r example}
-#library(njelections)
+All elections from 2004 to 2021 are included, at three levels of organization:
 
-#election_by_municipality |> 
-#  dplyr::filter(year == 2016, 
-#                office == "Senate", 
-#                county == "Ocean")
+* Statewide (`election_statewide`)
+* By county (`election_by_county`)
+* By municipality (`election_by_municipality`)
+
+#### Table `election_statewide`
+Table `election_statewide` contains the following columns, which are common
+to all tables in this dataset:
+```{r echo=FALSE}
+tibble::tribble(
+  ~Field,      ~Type, ~Description,                           ~Example,
+  "year",      "int", "Election year",                        "2004",
+  "type",      "chr", "Currently always 'General'",           "General",
+  "office",    "chr", "'President', 'Senate', or 'Governor'", "President",
+  "candidate", "chr", "Candidate name",                       "John F. Kerry",
+  "party",     "chr", "Candidate party",                      "Democratic",
+  "vote",      "int", "Number of votes received",             "1911430",
+) |> kbl("election_statewide")
+```
+There is one row in this table for every `year`, `office`, and `candidate` combination.
+
+##### Example
+```{r echo=FALSE}
+head(election_statewide, 3) |> kbl("head(election_statewide), 3")
+```
+
+#### Table `election_by_county`
+Table `election_by_county` contains all of the columns in `election_statewide`, plus
+two more:
+```{r echo=FALSE}
+tibble::tribble(
+  ~Field,      ~Type, ~Description,                           ~Example,
+  "GEOID",    "chr",  "US Census GEOID for the county",       "34001",
+  "county",   "chr",  "County name",                          "Atlantic County",
+) |> kbl("Additional fields in election_by_county")
+```
+There is one row in this table for every `year`, `office`, `county` and `candidate` combination. In particular, for a given `year` and `office`, every `candidate` is
+represented in every `county`.
+
+##### Example
+```{r echo=FALSE}
+head(election_by_county, 3) |> kbl("head(election_by_county, 3)")
+```
+
+#### Table `election_by_municipality`
+Table `election_by_municipality` contains all of the columns in `election_statewide`, plus three more:
+```{r echo=FALSE}
+tibble::tribble(
+  ~Field,         ~Type,  ~Description,                           ~Example,
+  "GEOID",        "chr",  "US Census GEOID for the municipality", "3400100100",
+  "county",       "chr",  "County name",                          "Atlantic County",
+  "municipality", "chr",  "Municipality name",                    "Absecon city",
+) |> kbl("Additional fields in election_by_municipality")
+```
+There is one row in this table for every `year`, `office`, `county`, `municipality` and `candidate` combination. In particular, for a given `year` and `office`, every `candidate` is represented in every `municipality`.
+
+##### Example
+```{r echo=FALSE}
+head(election_by_municipality, 3) |> kbl("head(election_by_municipality, 3)")
+```
+
+## Notes
+
+### Data Source
+The source for this data is the [New Jersey Division of Elections](https://nj.gov/state/elections/index.shtml). The data was derived by scraping the PDFs in the [election results archive](https://nj.gov/state/elections/election-information-results.shtml).
+
+### Differences between this data set and the official results.
+The official results for Trenton and Robbinsville in the in the 2013 election for Governor are incorrect, by swapping the results for Trenton and Robbinsville for every candidate except Buono. In this package the results are corrected:
+```{r echo=FALSE} 
+tibble::tribble(
+  ~Candidate, ~`Official Trenton`, ~`Corrected Trenton`, ~`Official Robbinsville`, ~`Corrected Robbinsville`,
+  "Christie",  3035, 2102, 2102, 3035,
+  "Buono",     9179, 9179, 1228, 1228,
+  "Araujo",    1,    17,   17,   1,
+  "Boss",      3,    12,   12,   3,
+  "Kaplan",    31,   32,   32,   31, 
+  "Sare",      12,   4,    4,    12,
+  "Schroeder", 4,    28,   28,   4,
+  "Welzer",    26,   43,   43,   26,
+) |> kbl("Corrections to 2013 Governor election")
+```
+
+Any other differences between the vote counts in this package and the official results is unintentional.
+
+### NJ Municipalities
+New Jersey municipalities have not been stable over the course of 2004-2021:
+
+* Several municipalities have changed names or been assigned new GEOIDs by the US Census. 
+* In 2013, Princeton borough and Princeton township merged
+
+The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) package contains municipality names and GEOIDs across the period 2001-2021. The `election_by_municipality` table uses the names and GEOIDs from the `njmunicipalities` package for the year of the election, with the exception of the Princetons for the 2012 election.
+
+#### Princeton and the 2012 election.
+At the time of the 2012 election, Princeton borough and Princeton township were still separate municipalities. However, the official results for Mercer County provide only the combined results for the merged Princeton municipalities. 
+
+As a result, the `election_by_municipality` table uses the 2013 municipality list
+from `njmunicipalities` for the 2012 election. The Princeton merger is the only difference in the 2012 and 2013 municipality list.
+
+### Candidate and Party Names
+In general, an attempt was made to record candidate and party names exactly as they appear in the official results. However, when the same candidate or party appears
+in multiple elections with slightly varying names, the most common form of the name was used.
+
+For example, Jeff Boss has appeared in official results variously as 'Jeff Boss', 'Jeffrey Boss' and 'Jeffery "Jeff" Boss'.  In this package, his name has been standardized to "Jeff Boss".
+
+Similarly, the Green and Libertarian party names have been standardized to "Green Party" and "Libertarian Party".
+
+When a candidate does not have a listed party, the party is recorded as "Independent".
+
+### Consistency across levels
+#### State vs County
+For every `year`, `office` and `candidate` combination, the vote total across counties exactly matches the vote total in the statewide results:
+```{r message=FALSE}
+library(dplyr)
+state_county_delta <- election_by_county |>
+  group_by(year, type, office, candidate) |>
+  summarize(county_vote=sum(vote), .groups="drop") |>
+  left_join(election_statewide,
+             by=c("year", "type", "office", "candidate")) |>
+  filter(vote != county_vote)
+```
+#### County vs Municipality
+The sum across municipalities does not always match the county total. In many -- but not all -- cases, the official county results account for the discrepancy. For example, the official [2020 Presidential results from Morris County](https://nj.gov/state/elections/assets/pdf/election-results/2020/2020-official-general-results-president-morris.pdf) include federal overseas votes in a separate row, not assigned to any municipality.  These discrepancies, even when explicitly
+included in the official results, are not recorded in this package.
+
+## Examples
+
+### Displaying in 'wide' format
+```{r message=FALSE}
+library(dplyr)
+library(tidyr)
+library(njelections)
+hudson_senate_2012 <- election_by_municipality |> 
+  filter(year == 2012, 
+                office == "Senate", 
+                county == "Hudson County") |>
+  select(GEOID, municipality, party, vote) |>
+  pivot_wider(names_from = party, values_from = vote) |>
+  select(GEOID, municipality, Democratic, Republican, 
+         Libertarian = `Libertarian Party`, Green = `Green Party`)
+```
+```{r echo=FALSE}
+hudson_senate_2012 |> kbl("Hudson County 2012 Senate results")
+```
+
+### Accounting for changing municipal names
+
+TODO
+
+### Example plot -- two party share of vote in Salem County, 2004-2021
+
+```{r message=FALSE}
+library(ggplot2)
+election_by_municipality |>
+  filter(county=="Salem County", 
+         party %in% c("Democratic", "Republican")) |>
+  group_by(municipality, year, office) |>
+  mutate(two_party_share_of_vote = vote/sum(vote)) |>
+  ggplot(aes(x=year, y=two_party_share_of_vote, color=party)) +
+  geom_point() + geom_smooth(method="loess") + facet_wrap("municipality") +
+  scale_color_manual(values = c("Democratic"="blue", "Republican"="red"))
+
 ```
 
