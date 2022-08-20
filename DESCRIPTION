@@ -1,7 +1,7 @@
 Package: njelections
 Type: Package
 Title: NJ Elections
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Tor", "Gunston", , "tor.gunston@protonmail.com", role = c("aut", "cre"))
 Description: New Jersey election results from 2004-2021.
