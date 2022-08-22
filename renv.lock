@@ -116,10 +116,10 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.7.1",
+      "Version": "3.7.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "2fda237f24bc56508f31394beaa56877",
+      "Hash": "358689cac9fe93b1bb3a19088d2dbed8",
       "Requirements": [
         "R6",
         "processx"
@@ -565,15 +565,15 @@
     },
     "njmunicipalities": {
       "Package": "njmunicipalities",
-      "Version": "0.3.1",
+      "Version": "0.4.0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "tor-gu",
       "RemoteRepo": "njmunicipalities",
       "RemoteRef": "main",
-      "RemoteSha": "9471fb12d0819db568b8ee6931337c69571934a4",
+      "RemoteSha": "360fb13b0c1e9cc9a1d7f02433bcf7c6d2d474dc",
       "RemoteHost": "api.github.com",
-      "Hash": "2220f599eb83421975142b37855cbb64",
+      "Hash": "b9b38b8c03deeeb7cebee10a23c7eccd",
       "Requirements": [
         "dplyr",
         "magrittr",
