@@ -165,9 +165,9 @@ For every `year`, `office` and `candidate` combination, the vote total across co
 library(dplyr)
 election_by_county |>
   group_by(year, type, office, candidate) |>
-  summarize(county_vote=sum(vote), .groups="drop") |>
+  summarize(county_vote = sum(vote), .groups = "drop") |>
   left_join(election_statewide,
-             by=c("year", "type", "office", "candidate")) |>
+             by = c("year", "type", "office", "candidate")) |>
   filter(vote != county_vote)
 ```
 #### County vs Municipality
@@ -195,21 +195,50 @@ hudson_senate_2012 |> kbl("Hudson County 2012 Senate results")
 ```
 
 ### Accounting for changing municipal names
+Over the period 2004-2021, several municipalities changed names and GEOIDs, and
+Princeton township was merged into Princeton borough.  The package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) is helpful here.  
 
-TODO
+As an example, let us consider Mercer county, which includes the merged Princetons, as well as Robbinsville township, previously known as Washington township. Let's plot the two-party share of votes for each municipality in Mercer, using the current name for each municipality, and combining the totals for the Princetons prior to the merger.
 
-### Example plot -- two party share of vote in Salem County, 2004-2021
-
-```{r message=FALSE}
-library(ggplot2)
-election_by_municipality |>
-  filter(county=="Salem County", 
-         party %in% c("Democratic", "Republican")) |>
-  group_by(municipality, year, office) |>
-  mutate(two_party_share_of_vote = vote/sum(vote)) |>
-  ggplot(aes(x=year, y=two_party_share_of_vote, color=party)) +
-  geom_point() + geom_smooth(method="loess") + facet_wrap("municipality") +
-  scale_color_manual(values = c("Democratic"="blue", "Republican"="red"))
-
+First, generate a cross reference table for the GEOIDs, using the 2021 GEOIDs and municipality names as the reference.  We use `njmunicipalities::get_geoid_cross_reference` and `njmunicipalities::get_municipalities` for this.
+```{r}
+library(njmunicipalities)
+geoid_xref <- get_geoid_cross_references(2021, 2004:2021) |>
+  dplyr::filter(!is.na(GEOID_ref)) |>
+  dplyr::left_join(get_municipalities(2021), by = c("GEOID_ref" = "GEOID"))
+```
+```{r echo=FALSE}
+geoid_xref |> head(5) |> kbl("geoid_xref")
 ```
 
+Now, generate the two-party share of the vote, combining Princeton borough and township. The constants `PRINCETON_TWP_GEOID` and `PRINCETON_BORO_GEOID` come from `njmunicipalities`.
+```{r}
+tpsov <- njelections::election_by_municipality |>
+  dplyr::mutate(GEOID = dplyr::if_else(GEOID == PRINCETON_TWP_GEOID,
+                                       PRINCETON_BORO_GEOID,
+                                       GEOID)) |>
+  dplyr::group_by(year, office, GEOID, party) |>
+  dplyr::summarize(vote = sum(vote), .groups = "drop") |>
+  dplyr::filter(party %in% c("Democratic", "Republican")) |>
+  dplyr::group_by(year, office, GEOID) |>
+  dplyr::summarize(party = party, 
+                   two_party_share_of_vote = vote/sum(vote), .groups="drop")
+```
+```{r echo=FALSE}
+tpsov |> head(5) |> kbl("tpsov")
+```
+Finally, combine the two tables and plot.
+```{r}
+library(ggplot2)
+tpsov |>
+  dplyr::left_join(geoid_xref, by = c("year", "GEOID")) |>
+  dplyr::filter(county == "Mercer County") |>
+  ggplot(aes(x = year, y = two_party_share_of_vote, color = party)) +
+  scale_color_manual(values = c("Democratic" = "blue", "Republican" = "red")) +
+  geom_point() + 
+  geom_smooth(se=FALSE) + 
+  facet_wrap("municipality") +
+  ylab("Two party share of vote") +
+  xlab("Election year") +
+  labs(title = "Mercer County NJ, two party share of vote, 2004-2021")
+```

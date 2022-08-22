@@ -835,9 +835,9 @@ across counties exactly matches the vote total in the statewide results:
 library(dplyr)
 election_by_county |>
   group_by(year, type, office, candidate) |>
-  summarize(county_vote=sum(vote), .groups="drop") |>
+  summarize(county_vote = sum(vote), .groups = "drop") |>
   left_join(election_statewide,
-             by=c("year", "type", "office", "candidate")) |>
+             by = c("year", "type", "office", "candidate")) |>
   filter(vote != county_vote)
 #> # A tibble: 0 × 7
 #> # … with 7 variables: year <int>, type <chr>, office <chr>, candidate <chr>,
@@ -1142,20 +1142,280 @@ West New York town
 
 ### Accounting for changing municipal names
 
-TODO
+Over the period 2004-2021, several municipalities changed names and
+GEOIDs, and Princeton township was merged into Princeton borough. The
+package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities)
+is helpful here.
 
-### Example plot – two party share of vote in Salem County, 2004-2021
+As an example, let us consider Mercer county, which includes the merged
+Princetons, as well as Robbinsville township, previously known as
+Washington township. Let’s plot the two-party share of votes for each
+municipality in Mercer, using the current name for each municipality,
+and combining the totals for the Princetons prior to the merger.
+
+First, generate a cross reference table for the GEOIDs, using the 2021
+GEOIDs and municipality names as the reference. We use
+`njmunicipalities::get_geoid_cross_reference` and
+`njmunicipalities::get_municipalities` for this.
+
+``` r
+library(njmunicipalities)
+geoid_xref <- get_geoid_cross_references(2021, 2004:2021) |>
+  dplyr::filter(!is.na(GEOID_ref)) |>
+  dplyr::left_join(get_municipalities(2021), by = c("GEOID_ref" = "GEOID"))
+```
+
+<table class="kable">
+<thead>
+<tr>
+<th style="text-align:right;">
+year
+</th>
+<th style="text-align:left;">
+GEOID_ref
+</th>
+<th style="text-align:left;">
+GEOID
+</th>
+<th style="text-align:left;">
+county
+</th>
+<th style="text-align:left;">
+municipality
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+3400100100
+</td>
+<td style="text-align:left;">
+3400100100
+</td>
+<td style="text-align:left;">
+Atlantic County
+</td>
+<td style="text-align:left;">
+Absecon city
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+3400102080
+</td>
+<td style="text-align:left;">
+3400102080
+</td>
+<td style="text-align:left;">
+Atlantic County
+</td>
+<td style="text-align:left;">
+Atlantic City city
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+3400107810
+</td>
+<td style="text-align:left;">
+3400107810
+</td>
+<td style="text-align:left;">
+Atlantic County
+</td>
+<td style="text-align:left;">
+Brigantine city
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+3400108680
+</td>
+<td style="text-align:left;">
+3400108680
+</td>
+<td style="text-align:left;">
+Atlantic County
+</td>
+<td style="text-align:left;">
+Buena borough
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+3400108710
+</td>
+<td style="text-align:left;">
+3400108710
+</td>
+<td style="text-align:left;">
+Atlantic County
+</td>
+<td style="text-align:left;">
+Buena Vista township
+</td>
+</tr>
+</tbody>
+</table>
+
+Now, generate the two-party share of the vote, combining Princeton
+borough and township. The constants `PRINCETON_TWP_GEOID` and
+`PRINCETON_BORO_GEOID` come from `njmunicipalities`.
+
+``` r
+tpsov <- njelections::election_by_municipality |>
+  dplyr::mutate(GEOID = dplyr::if_else(GEOID == PRINCETON_TWP_GEOID,
+                                       PRINCETON_BORO_GEOID,
+                                       GEOID)) |>
+  dplyr::group_by(year, office, GEOID, party) |>
+  dplyr::summarize(vote = sum(vote), .groups = "drop") |>
+  dplyr::filter(party %in% c("Democratic", "Republican")) |>
+  dplyr::group_by(year, office, GEOID) |>
+  dplyr::summarize(party = party, 
+                   two_party_share_of_vote = vote/sum(vote), .groups="drop")
+```
+
+<table class="kable">
+<thead>
+<tr>
+<th style="text-align:right;">
+year
+</th>
+<th style="text-align:left;">
+office
+</th>
+<th style="text-align:left;">
+GEOID
+</th>
+<th style="text-align:left;">
+party
+</th>
+<th style="text-align:right;">
+two_party_share_of_vote
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:left;">
+3400100100
+</td>
+<td style="text-align:left;">
+Democratic
+</td>
+<td style="text-align:right;">
+0.4526025
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:left;">
+3400100100
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:right;">
+0.5473975
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:left;">
+3400102080
+</td>
+<td style="text-align:left;">
+Democratic
+</td>
+<td style="text-align:right;">
+0.7595311
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:left;">
+3400102080
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:right;">
+0.2404689
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2004
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:left;">
+3400107810
+</td>
+<td style="text-align:left;">
+Democratic
+</td>
+<td style="text-align:right;">
+0.4536190
+</td>
+</tr>
+</tbody>
+</table>
+
+Finally, combine the two tables and plot.
 
 ``` r
 library(ggplot2)
-election_by_municipality |>
-  filter(county=="Salem County", 
-         party %in% c("Democratic", "Republican")) |>
-  group_by(municipality, year, office) |>
-  mutate(two_party_share_of_vote = vote/sum(vote)) |>
-  ggplot(aes(x=year, y=two_party_share_of_vote, color=party)) +
-  geom_point() + geom_smooth(method="loess") + facet_wrap("municipality") +
-  scale_color_manual(values = c("Democratic"="blue", "Republican"="red"))
+tpsov |>
+  dplyr::left_join(geoid_xref, by = c("year", "GEOID")) |>
+  dplyr::filter(county == "Mercer County") |>
+  ggplot(aes(x = year, y = two_party_share_of_vote, color = party)) +
+  scale_color_manual(values = c("Democratic" = "blue", "Republican" = "red")) +
+  geom_point() + 
+  geom_smooth(se=FALSE) + 
+  facet_wrap("municipality") +
+  ylab("Two party share of vote") +
+  xlab("Election year") +
+  labs(title = "Mercer County NJ, two party share of vote, 2004-2021")
+#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
