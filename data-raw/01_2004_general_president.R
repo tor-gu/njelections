@@ -30,8 +30,8 @@ additional_data <- NULL
 # All the Atlantic County municipalities have their town/borough/city/etc
 # suffixes stripped. We need to add them as corrections.
 atlantic_corrections <- get_municipalities(2004) |>
-  dplyr::filter(county=="Atlantic County") |>
-  dplyr::rename(corrected_name=municipality) |>
+  dplyr::filter(county == "Atlantic County") |>
+  dplyr::rename(corrected_name = municipality) |>
   dplyr::mutate(municipality = stringr::str_remove(corrected_name, " \\w*$")) |>
   dplyr::select(-GEOID)
 additional_municipal_corrections <- atlantic_corrections

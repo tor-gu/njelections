@@ -122,7 +122,7 @@ download_pdfs <- function(year, county_table, file_name_base_template) {
 # The output is a csv file.
 convert_pdfs_tabulizer <- function(files) {
   walk(files, tabulizer::extract_tables,
-       output="csv", outdir="data-raw")
+       output = "csv", outdir = "data-raw")
 }
 
 ## Pdftools ----
@@ -134,7 +134,7 @@ convert_pdfs_tabulizer <- function(files) {
 read_pdf_raw_ <- function(pdf_fname) {
   tibble(
     line = pdftools::pdf_text(pdf_fname) |>
-      str_split(pattern="\n") |>
+      str_split(pattern = "\n") |>
       unlist()
   )
 }
@@ -155,14 +155,14 @@ as.integer.or.na_ <- function(x) {
 parse_pdf_raw_ <- function(pdf_raw) {
   pdf_raw |>
     filter(str_starts(line, "\\s{0,7}[A-Z]")) |>
-    mutate(id=row_number()) |>
-    separate_rows(line, sep="\\s+(?=\\d)") |>
+    mutate(id = row_number()) |>
+    separate_rows(line, sep = "\\s+(?=\\d)") |>
     group_by(id) |>
-    mutate(col=paste0("col_", row_number())) |>
+    mutate(col = paste0("col_", row_number())) |>
     ungroup() |>
-    pivot_wider(id_cols = id, names_from=col, values_from=line) |>
+    pivot_wider(id_cols = id, names_from = col, values_from = line) |>
     mutate(across(where(is.character), str_trim)) |>
-    rename(MUNICIPALITIES=col_1) |>
+    rename(MUNICIPALITIES = col_1) |>
     filter(MUNICIPALITIES != "MUNICIPALITIES") |>
     mutate(across(starts_with("col_"), str_remove, ",")) |>
     mutate(across(starts_with("col_"), ~ if_else(.x == "", "0", .x))) |>
@@ -180,12 +180,12 @@ assign_column_names_ <- function(tbl, candidate_table) {
   column_names <- candidate_table |>
     mutate(
       col_name = paste0("col_", row_number() + 1),
-      new_col_name=paste0(name, "\r", party)
+      new_col_name = paste0(name, "\r", party)
       ) |>
     select(col_name, new_col_name) |>
     deframe()
   tbl |>
-    select(MUNICIPALITIES, num_range("col_", 2:(1+length(column_names)))) |>
+    select(MUNICIPALITIES, num_range("col_", 2:(1 + length(column_names)))) |>
     rename_with(~column_names, .cols = starts_with("col_"))
 }
 
@@ -253,8 +253,9 @@ create_additional_csvs <- function(additional_data,
   if (!is.null(additional_data)) {
     walk2(names(additional_data), additional_data, ~
             create_additional_csv_( .y, .x,
-                                    county_table, candidate_table, file_name_base_template)
-
+                                    county_table,
+                                    candidate_table,
+                                    file_name_base_template)
     )
   }
 }
@@ -270,7 +271,7 @@ repair_columns_ <- function(table, column_repair_table) {
       value <- column_repair_table[idx,]$repaired_value
       starts <- column_repair_table[idx,]$starts_with
       result <- result |>
-        rename_with(~ value, .cols=starts_with(starts))
+        rename_with(~ value, .cols = starts_with(starts))
     }
   }
   result
@@ -284,7 +285,7 @@ repair_counties_ <- function(table, county_repair_table) {
       old_name <- county_repair_table[idx,]$old_name
       new_name <- county_repair_table[idx,]$new_name
       result <- result |>
-        mutate(county=str_replace(county, old_name, new_name))
+        mutate(county = str_replace(county, old_name, new_name))
     }
   }
   result
@@ -314,14 +315,14 @@ read_from_csv <- function(year, county_table,
         map(repair_columns_, column_repair_table) |>
         reduce(bind_rows)
     }) |>
-    bind_rows(.id="county") |>
-    pivot_longer(cols=c(-county, -MUNICIPALITIES),
+    bind_rows(.id = "county") |>
+    pivot_longer(cols = c(-county, -MUNICIPALITIES),
                  names_to = "candidate",
                  values_to = "vote") |>
-    separate(candidate, into=c("candidate", "party"),
-             sep="\r",
-             extra="merge") |>
-    mutate(county=str_c(str_to_title(county), " County")) |>
+    separate(candidate, into = c("candidate", "party"),
+             sep = "\r",
+             extra = "merge") |>
+    mutate(county = str_c(str_to_title(county), " County")) |>
     repair_counties_(county_repair_table)
 }
 
@@ -333,7 +334,7 @@ read_from_csv <- function(year, county_table,
 # additional corrections supplied as an argument.
 repair_municipalities <- function(table, additional_corrections = NULL) {
   result <- table |>
-    rename(municipality=MUNICIPALITIES) |>
+    rename(municipality = MUNICIPALITIES) |>
     filter(municipality != "Municipalities") |>
     filter(municipality != "COUNTY TOTAL") |>
     filter(municipality != "County Totals") |>
@@ -374,7 +375,7 @@ repair_municipalities <- function(table, additional_corrections = NULL) {
     mutate(municipality = str_remove(municipality, ",")) |>
     mutate(municipality = str_replace(municipality, "&", "and")) |>
     left_join(common_municipality_corrections_,
-              by=c("county", "municipality")) |>
+              by = c("county", "municipality")) |>
     mutate(municipality = if_else(is.na(corrected_name),
                                   municipality,
                                   corrected_name)) |>
@@ -383,7 +384,7 @@ repair_municipalities <- function(table, additional_corrections = NULL) {
   if (!is.null(additional_corrections)) {
     result <- result |>
       left_join(additional_corrections,
-                by=c("county", "municipality")) |>
+                by = c("county", "municipality")) |>
       mutate(municipality = if_else(is.na(corrected_name),
                                     municipality,
                                     corrected_name)) |>
@@ -398,7 +399,7 @@ repair_votes <- function(table, vote_corrections = NULL) {
     table
   } else {
     table |> rows_update(vote_corrections,
-                         by=c("county", "municipality", "candidate"))
+                         by = c("county", "municipality", "candidate"))
   }
 }
 
@@ -408,7 +409,7 @@ repair_votes <- function(table, vote_corrections = NULL) {
 
 # Parse an order configuration file
 parse_order_file_ <- function(lines) {
-  list(county=lines[[1]], candidates=lines[-(1:2)])
+  list(county = lines[[1]], candidates = lines[-(1:2)])
 }
 
 # Create a permutation vector
@@ -431,7 +432,7 @@ get_county_table <- function(updates) {
     standard_county_table_
   } else {
     standard_county_table_ |>
-      left_join(updates, by=c("county"="standard_name")) |>
+      left_join(updates, by = c("county" = "standard_name")) |>
       mutate(county = if_else(is.na(updated_name), county, updated_name),
              rev = if_else(is.na(updated_rev), rev, updated_rev)) |>
       select(county, rev)
@@ -493,14 +494,14 @@ go <- function(election, year, office, county_table, candidate_table,
   results <- read_from_csv(
     year, county_table, file_name_base_template, county_repair_table,
     column_repair_table) |>
-    mutate(vote = as.integer(vote), year=as.integer(year)) |>
+    mutate(vote = as.integer(vote), year = as.integer(year)) |>
     repair_municipalities(additional_municipal_corrections) |>
     repair_votes(vote_corrections)
 
   results <- results |>
-    mutate(year=year, type="General", office=office) |>
+    mutate(year = year, type = "General", office = office) |>
     left_join(get_municipalities(municipality_year),
-              by=c("county", "municipality"))
+              by = c("county", "municipality"))
 
   election |>
     filter(year != .env$year | office != .env$office) |>

@@ -3,7 +3,7 @@
 check_same_candidates <- function(tbl, key) {
   exceptions <- tbl |>
     select(-party) |>
-    pivot_wider(names_from="candidate", values_from=vote) |>
+    pivot_wider(names_from = "candidate", values_from = vote) |>
     filter(if_any(everything(), is.na))
   if (nrow(exceptions) > 0) {
     message("Inconsistent candidate list")
@@ -21,9 +21,9 @@ check_municipalities <- function(tbl, key) {
   election_municipalities <- tbl |> select(county, municipality, GEOID) |>
     unique()
   missing <- anti_join(municipalities, election_municipalities,
-                       by=names(municipalities))
+                       by = names(municipalities))
   extra <- anti_join(election_municipalities, municipalities,
-                     by=names(municipalities))
+                     by = names(municipalities))
   if (nrow(missing) > 0) {
     message("Missing municipalities")
     print(key)
@@ -56,13 +56,13 @@ statewide_candidates <- election_statewide |>
   select(year, type, office, candidate) |>
   unique()
 missing_county <- anti_join(municipal_candidates, county_candidates,
-                            by=c("year", "type", "office", "county", "candidate"))
+                            by = c("year", "type", "office", "county", "candidate"))
 extra_county <- anti_join(county_candidates, municipal_candidates,
-                          by=c("year", "type", "office", "county", "candidate"))
+                          by = c("year", "type", "office", "county", "candidate"))
 missing_state <- anti_join(county_candidates, statewide_candidates,
-                           by=c("year", "type", "office", "candidate"))
+                           by = c("year", "type", "office", "candidate"))
 extra_state <- anti_join(statewide_candidates, county_candidates,
-                         by=c("year", "type", "office", "candidate"))
+                         by = c("year", "type", "office", "candidate"))
 if (nrow(missing_county) > 0) {
   message("Missing county candidates")
   print(missing_county)
@@ -83,7 +83,7 @@ if (nrow(extra_state) > 0) {
 # Check the state totals match the county totals
 state_county_delta <- election_by_county |>
   group_by(year, type, office, candidate) |>
-  summarize(county_vote=sum(vote), .groups="drop") |>
+  summarize(county_vote = sum(vote), .groups = "drop") |>
   left_join(election_statewide,
              by=c("year", "type", "office", "candidate")) |>
   filter(vote != county_vote)
@@ -145,13 +145,13 @@ known_deltas <- tribble(
 
 municipal_county_delta <- election_by_municipality |>
   group_by(year, office, county, candidate) |>
-  summarize(municipal_vote=sum(vote), .groups="drop") |>
-  left_join(election_by_county, by=c("year", "office", "county", "candidate")) |>
+  summarize(municipal_vote = sum(vote), .groups = "drop") |>
+  left_join(election_by_county, by = c("year", "office", "county", "candidate")) |>
   mutate(delta = vote - municipal_vote) |>
   filter(!between(delta, -1, 5)) |>
   filter(!between(delta/vote, 0.0, .002)) |>
   anti_join(known_deltas,
-            by=c("year", "office", "county", "candidate", "delta"))
+            by = c("year", "office", "county", "candidate", "delta"))
 
 if (nrow(municipal_county_delta) > 0) {
   message("Discrepancies between municipal and county totals")

@@ -23,8 +23,9 @@ file_names <- tribble(
 )
 
 url_pattern <- "https://nj.gov/state/elections/assets/pdf/election-results/{year}/{file_name}"
-file_names <- file_names |> mutate(url=glue(url_pattern),
-                     file=fs::path("data-raw", file_name))
+file_names <- file_names |>
+  mutate(url = glue(url_pattern),
+         file = fs::path("data-raw", file_name))
 walk2(file_names$url, file_names$file, download_if_missing)
 
 
@@ -58,28 +59,28 @@ candidates <- election_by_municipality |>
 get_candidate_page_map <- function(all_pages, candidates,
                                    year, office) {
   candidates <- candidates |>
-    filter(year==.env$year, office==.env$office)
+    filter(year == .env$year, office == .env$office)
   search_names <- pull(candidates, search_name)
   suppressMessages(
     map(all_pages, str_match, search_names) |>
-      map(as_tibble, .name_repair="unique") |>
+      map(as_tibble, .name_repair = "unique") |>
       map(filter, !is.na(`...1`)) |>
       map(pull, `...1`) |>
       enframe() |>
       unnest(value) |>
-      rename(page=name, search_name=value) |>
+      rename(page = name, search_name = value) |>
       right_join(candidates, by="search_name")
   )
 }
 
 get_vote_totals <- function(page, patterns) {
   stringi::stri_match(page,
-                      regex=patterns,
-                      opts_regex=list(case_insensitive=TRUE)) |>
+                      regex = patterns,
+                      opts_regex = list(case_insensitive = TRUE)) |>
     as_tibble(.name_repair = ~c("V1","V2","V3")) |>
-    select(name=V2, vote=V3) |>
-    mutate(vote=as.integer(str_remove_all(vote, ","))) |>
-    mutate(name=str_to_title(name))
+    select(name = V2, vote = V3) |>
+    mutate(vote = as.integer(str_remove_all(vote, ","))) |>
+    mutate(name = str_to_title(name))
 }
 
 # Because of a font issue on one page of one PDF (page 1 of the
@@ -104,7 +105,7 @@ adjust_for_font_issue <- function(page) {
   reduce2(input_chars,
           output_chars,
           stringi::stri_replace_all_fixed,
-          .init=page)
+          .init = page)
 }
 
 
@@ -133,7 +134,7 @@ page_map <- pmap(
 # Get the county totals from each page. We again use the
 # 'adjusted' text
 county_patterns <- counties |>
-  mutate(patt=str_remove(county, " County")) |>
+  mutate(patt = str_remove(county, " County")) |>
   mutate(patt = str_c(".{40,}", glue(r"(({patt}).+\s([0-9,]+\n))"))) |>
   pull(patt)
 
@@ -150,14 +151,14 @@ state_totals <- text |> map(
 
 combine_totals <- function(page_map, totals) {
   page_map |> group_by(page) |>
-    group_map(~left_join(.x, totals[[.y$page]], by=character())) |>
+    group_map(~left_join(.x, totals[[.y$page]], by = character())) |>
     bind_rows() |>
     select(year, office, candidate, name, vote)
 }
 
 combine_county_totals <- function(page_map, county_totals) {
   page_map |> group_by(page) |>
-    group_map(~left_join(.x, county_totals[[.y$page]], by=character())) |>
+    group_map(~left_join(.x, county_totals[[.y$page]], by = character())) |>
     bind_rows() |>
     mutate(county = str_c(name, " County")) |>
     select(year, office, candidate, county, vote)
@@ -171,13 +172,13 @@ election_by_county <- map2_dfr(page_map,
                                combine_totals) |>
   filter(!is.na(vote)) |>
   mutate(county = str_c(name, " County")) |>
-  left_join(counties, by="county") |>
+  left_join(counties, by = "county") |>
   left_join(candidate_party, by=c("year", "office", "candidate")) |>
   mutate(type="General") |>
   select(year, type, office, GEOID, county, candidate, party, vote)
 
 election_statewide <- map2_dfr(page_map, state_totals, combine_totals) |>
-  left_join(candidate_party, by=c("year", "office", "candidate")) |>
+  left_join(candidate_party, by = c("year", "office", "candidate")) |>
   mutate(type="General") |>
   select(year, type, office, candidate, party, vote)
 

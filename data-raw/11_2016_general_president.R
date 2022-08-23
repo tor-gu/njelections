@@ -39,6 +39,7 @@ election_by_municipality <- go(
 # (De la Fuente runs again in 2020)
 election_by_municipality <- election_by_municipality |>
   mutate(candidate = if_else(
-  year == 2016 & office == "President" & str_detect(candidate, "Fuente"),
-  'Roque "Rocky" De la Fuente', candidate))
+    year == 2016 & office == "President" & str_detect(candidate, "Fuente"),
+    'Roque "Rocky" De la Fuente', candidate
+  ))
 
