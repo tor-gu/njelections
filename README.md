@@ -1249,7 +1249,8 @@ tpsov |>
   facet_wrap("municipality") +
   ylab("Two party share of vote") +
   xlab("Election year") +
-  labs(title = "Mercer County NJ, two party share of vote, 2004-2021")
+  labs(title = "Mercer County, NJ, two party share of vote",
+       subtitle = "US Senate, President and Governor races, 2004-2021")
 ```
 
 <img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
