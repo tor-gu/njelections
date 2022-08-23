@@ -113,24 +113,23 @@ head(election_by_municipality, 3) |> kbl("head(election_by_municipality, 3)")
 
 ## Notes
 
-### Data Source
+### Data source
 The source for this data is the [New Jersey Division of Elections](https://nj.gov/state/elections/index.shtml). The data was derived by scraping the PDFs in the [election results archive](https://nj.gov/state/elections/election-information-results.shtml).
 
-### NJ Municipalities
+### NJ municipalities
 New Jersey municipalities have not been stable over the course of 2004-2021:
 
 * Several municipalities have changed names or been assigned new GEOIDs by the US Census. 
 * In 2013, Princeton borough and Princeton township merged
 
-The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) package contains municipality names and GEOIDs across the period 2001-2021. The `election_by_municipality` table uses the names and GEOIDs from the `njmunicipalities` package for the year of the election, with the exception of the Princetons for the 2012 election.
+The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) package contains municipality names and GEOIDs across the period 2001-2021. The `election_by_municipality` table uses the names and GEOIDs from the `njmunicipalities` package for the year of the election, with the [exception of the Princetons](#princeton-and-the-2012-election) for the 2012 election.  See [Accounting for changing municipal names](#accounting-for-changing-municipal-names) for a worked example dealing with these issues.
 
-#### Princeton and the 2012 election.
+#### Princeton and the 2012 election
 At the time of the 2012 election, Princeton borough and Princeton township were still separate municipalities. However, the official results for Mercer County provide only the combined results for the merged Princeton municipalities. 
 
-As a result, the `election_by_municipality` table uses the 2013 municipality list
-from `njmunicipalities` for the 2012 election. The Princeton merger is the only difference in the 2012 and 2013 municipality list.
+As a result, the `election_by_municipality` table uses the 2013 municipality list from `njmunicipalities` for the 2012 election. The Princeton merger is the only difference in the 2012 and 2013 municipality list.
 
-### Candidate and Party Names
+### Candidate and party names
 In general, an attempt was made to record candidate and party names exactly as they appear in the official results. However, when the same candidate or party appears
 in multiple elections with slightly varying names, the most common form of the name was used.
 
@@ -141,18 +140,20 @@ Similarly, the Green and Libertarian party names have been standardized to "Gree
 When a candidate does not have a listed party, the party is recorded as "Independent".
 
 ### Consistency across levels
-#### State vs County
+#### State vs county
 For every `year`, `office` and `candidate` combination, the vote total across counties exactly matches the vote total in the statewide results:
 ```{r message=FALSE}
 library(dplyr)
+# Statewide election matches sum of county votes for every year and every office
 election_by_county |>
   group_by(year, type, office, candidate) |>
   summarize(county_vote = sum(vote), .groups = "drop") |>
   left_join(election_statewide,
              by = c("year", "type", "office", "candidate")) |>
-  filter(vote != county_vote)
+  filter(vote != county_vote) |>
+  nrow()
 ```
-#### County vs Municipality
+#### County vs municipality
 The sum across municipalities does not always match the county total. In many -- but not all -- cases, the official county results account for the discrepancy. For example, the official [2020 Presidential results from Morris County](https://nj.gov/state/elections/assets/pdf/election-results/2020/2020-official-general-results-president-morris.pdf) include federal overseas votes in a separate row, not assigned to any municipality.  These discrepancies, even when explicitly
 included in the official results, are not recorded in this package.
 
@@ -180,7 +181,7 @@ hudson_senate_2012 |> kbl("Hudson County 2012 Senate results")
 Over the period 2004-2021, several municipalities changed names and GEOIDs, and
 Princeton township was merged into Princeton borough.  The package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) is helpful here.  
 
-As an example, let us consider Mercer county, which includes the merged Princetons, as well as Robbinsville township, previously known as Washington township. Let's plot the two-party share of votes for each municipality in Mercer, using the current name for each municipality, and combining the totals for the Princetons prior to the merger.
+As an example, let consider Mercer county, which includes the merged Princetons, as well as Robbinsville township, previously known as Washington township. Let's plot the two-party share of votes for each municipality in Mercer, using the current name for each municipality, and combining the totals for the Princetons in the years prior to the merger.
 
 First, generate a cross reference table for the GEOIDs, using the 2021 GEOIDs and municipality names as the reference.  We use `njmunicipalities::get_geoid_cross_reference` and `njmunicipalities::get_municipalities` for this.
 ```{r}
@@ -218,7 +219,7 @@ tpsov |>
   ggplot(aes(x = year, y = two_party_share_of_vote, color = party)) +
   scale_color_manual(values = c("Democratic" = "blue", "Republican" = "red")) +
   geom_point() + 
-  geom_smooth(se=FALSE) + 
+  geom_smooth(se = FALSE, formula = y ~ x, method = "loess") + 
   facet_wrap("municipality") +
   ylab("Two party share of vote") +
   xlab("Election year") +

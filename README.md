@@ -604,14 +604,14 @@ Independent
 
 ## Notes
 
-### Data Source
+### Data source
 
 The source for this data is the [New Jersey Division of
 Elections](https://nj.gov/state/elections/index.shtml). The data was
 derived by scraping the PDFs in the [election results
 archive](https://nj.gov/state/elections/election-information-results.shtml).
 
-### NJ Municipalities
+### NJ municipalities
 
 New Jersey municipalities have not been stable over the course of
 2004-2021:
@@ -624,9 +624,12 @@ The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities)
 package contains municipality names and GEOIDs across the period
 2001-2021. The `election_by_municipality` table uses the names and
 GEOIDs from the `njmunicipalities` package for the year of the election,
-with the exception of the Princetons for the 2012 election.
+with the [exception of the Princetons](#princeton-and-the-2012-election)
+for the 2012 election. See [Accounting for changing municipal
+names](#accounting-for-changing-municipal-names) for a worked example
+dealing with these issues.
 
-#### Princeton and the 2012 election.
+#### Princeton and the 2012 election
 
 At the time of the 2012 election, Princeton borough and Princeton
 township were still separate municipalities. However, the official
@@ -638,7 +641,7 @@ municipality list from `njmunicipalities` for the 2012 election. The
 Princeton merger is the only difference in the 2012 and 2013
 municipality list.
 
-### Candidate and Party Names
+### Candidate and party names
 
 In general, an attempt was made to record candidate and party names
 exactly as they appear in the official results. However, when the same
@@ -657,25 +660,25 @@ When a candidate does not have a listed party, the party is recorded as
 
 ### Consistency across levels
 
-#### State vs County
+#### State vs county
 
 For every `year`, `office` and `candidate` combination, the vote total
 across counties exactly matches the vote total in the statewide results:
 
 ``` r
 library(dplyr)
+# Statewide election matches sum of county votes for every year and every office
 election_by_county |>
   group_by(year, type, office, candidate) |>
   summarize(county_vote = sum(vote), .groups = "drop") |>
   left_join(election_statewide,
              by = c("year", "type", "office", "candidate")) |>
-  filter(vote != county_vote)
-#> # A tibble: 0 × 7
-#> # … with 7 variables: year <int>, type <chr>, office <chr>, candidate <chr>,
-#> #   county_vote <int>, party <chr>, vote <int>
+  filter(vote != county_vote) |>
+  nrow()
+#> [1] 0
 ```
 
-#### County vs Municipality
+#### County vs municipality
 
 The sum across municipalities does not always match the county total. In
 many – but not all – cases, the official county results account for the
@@ -978,11 +981,12 @@ GEOIDs, and Princeton township was merged into Princeton borough. The
 package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities)
 is helpful here.
 
-As an example, let us consider Mercer county, which includes the merged
+As an example, let consider Mercer county, which includes the merged
 Princetons, as well as Robbinsville township, previously known as
 Washington township. Let’s plot the two-party share of votes for each
 municipality in Mercer, using the current name for each municipality,
-and combining the totals for the Princetons prior to the merger.
+and combining the totals for the Princetons in the years prior to the
+merger.
 
 First, generate a cross reference table for the GEOIDs, using the 2021
 GEOIDs and municipality names as the reference. We use
@@ -1241,12 +1245,11 @@ tpsov |>
   ggplot(aes(x = year, y = two_party_share_of_vote, color = party)) +
   scale_color_manual(values = c("Democratic" = "blue", "Republican" = "red")) +
   geom_point() + 
-  geom_smooth(se=FALSE) + 
+  geom_smooth(se = FALSE, formula = y ~ x, method = "loess") + 
   facet_wrap("municipality") +
   ylab("Two party share of vote") +
   xlab("Election year") +
   labs(title = "Mercer County NJ, two party share of vote, 2004-2021")
-#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
 <img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
