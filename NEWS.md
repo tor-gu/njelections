@@ -1,3 +1,5 @@
+# njelections 1.0.0
+
 # njelections 0.3.0
 
 # njelections 0.2.0
