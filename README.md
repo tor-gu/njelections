@@ -4,6 +4,8 @@
 # njelections
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/tor-gu/njelections/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tor-gu/njelections/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This is a data package for R containing the results of statewide
