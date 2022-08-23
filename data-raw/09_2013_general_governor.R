@@ -63,22 +63,6 @@ vote_corrections <- tribble(
   "Union County",     "Winfield township",      "Diane W. Sare",     0,
   "Union County",     "Winfield township",      "Hank Schroeder",    0,
   "Union County",     "Winfield township",      "Steven Welzer",     4,
-  # The revised PDF has switched the results of Trenton and Robbinsville for
-  # all candidates other than Buono. We will correct that here.
-  "Mercer County",    "Robbinsville township",  "Chris Christie",    3035,
-  "Mercer County",    "Trenton city",           "Chris Christie",    2102,
-  "Mercer County",    "Robbinsville township",  "William Araujo",    1,
-  "Mercer County",    "Trenton city",           "William Araujo",    17,
-  "Mercer County",    "Robbinsville township",  "Jeff Boss",         3,
-  "Mercer County",    "Trenton city",           "Jeff Boss",         12,
-  "Mercer County",    "Robbinsville township",  "Kenneth R. Kaplan", 31,
-  "Mercer County",    "Trenton city",           "Kenneth R. Kaplan", 32,
-  "Mercer County",    "Robbinsville township",  "Diane W. Sare",     12,
-  "Mercer County",    "Trenton city",           "Diane W. Sare",     4,
-  "Mercer County",    "Robbinsville township",  "Hank Schroeder",    4,
-  "Mercer County",    "Trenton city",           "Hank Schroeder",    28,
-  "Mercer County",    "Robbinsville township",  "Steven Welzer",     26,
-  "Mercer County",    "Trenton city",           "Steven Welzer",     43,
 )
 
 # Go ----

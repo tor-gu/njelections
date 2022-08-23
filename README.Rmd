@@ -116,24 +116,6 @@ head(election_by_municipality, 3) |> kbl("head(election_by_municipality, 3)")
 ### Data Source
 The source for this data is the [New Jersey Division of Elections](https://nj.gov/state/elections/index.shtml). The data was derived by scraping the PDFs in the [election results archive](https://nj.gov/state/elections/election-information-results.shtml).
 
-### Differences between this data set and the official results.
-The official results for Trenton and Robbinsville in the in the 2013 election for Governor are incorrect, as they swap the results for Trenton and Robbinsville for every candidate except Buono. In this package the results are corrected:
-```{r echo=FALSE} 
-tibble::tribble(
-  ~Candidate, ~`Official Trenton`, ~`Corrected Trenton`, ~`Official Robbinsville`, ~`Corrected Robbinsville`,
-  "Christie",  3035, 2102, 2102, 3035,
-  "Buono",     9179, 9179, 1228, 1228,
-  "Araujo",    1,    17,   17,   1,
-  "Boss",      3,    12,   12,   3,
-  "Kaplan",    31,   32,   32,   31, 
-  "Sare",      12,   4,    4,    12,
-  "Schroeder", 4,    28,   28,   4,
-  "Welzer",    26,   43,   43,   26,
-) |> kbl("Corrections to 2013 Governor election")
-```
-
-Any other differences between the vote counts in this package and the official results is unintentional.
-
 ### NJ Municipalities
 New Jersey municipalities have not been stable over the course of 2004-2021:
 
