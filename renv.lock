@@ -565,15 +565,15 @@
     },
     "njmunicipalities": {
       "Package": "njmunicipalities",
-      "Version": "0.4.0",
+      "Version": "1.0.0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "tor-gu",
       "RemoteRepo": "njmunicipalities",
       "RemoteRef": "main",
-      "RemoteSha": "360fb13b0c1e9cc9a1d7f02433bcf7c6d2d474dc",
+      "RemoteSha": "f117c0fa050883b32182e0d153477e195e3daa93",
       "RemoteHost": "api.github.com",
-      "Hash": "b9b38b8c03deeeb7cebee10a23c7eccd",
+      "Hash": "0d48ac27ca0700f3a269bb3ccdd00b3b",
       "Requirements": [
         "dplyr",
         "magrittr",
@@ -788,10 +788,10 @@
     },
     "rstudioapi": {
       "Package": "rstudioapi",
-      "Version": "0.13",
+      "Version": "0.14",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "06c85365a03fdaf699966cc1d3cf53ea",
+      "Hash": "690bd2acc42a9166ce34845884459320",
       "Requirements": []
     },
     "rvest": {

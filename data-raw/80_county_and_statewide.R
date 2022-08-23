@@ -60,14 +60,16 @@ get_candidate_page_map <- function(all_pages, candidates,
   candidates <- candidates |>
     filter(year==.env$year, office==.env$office)
   search_names <- pull(candidates, search_name)
-  map(all_pages, str_match, search_names) |>
-    map(as_tibble, .name_repair="unique") |>
-    map(filter, !is.na(`...1`)) |>
-    map(pull, `...1`) |>
-    enframe() |>
-    unnest(value) |>
-    rename(page=name, search_name=value) |>
-    right_join(candidates, by="search_name")
+  suppressMessages(
+    map(all_pages, str_match, search_names) |>
+      map(as_tibble, .name_repair="unique") |>
+      map(filter, !is.na(`...1`)) |>
+      map(pull, `...1`) |>
+      enframe() |>
+      unnest(value) |>
+      rename(page=name, search_name=value) |>
+      right_join(candidates, by="search_name")
+  )
 }
 
 get_vote_totals <- function(page, patterns) {
