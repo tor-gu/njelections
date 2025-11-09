@@ -121,7 +121,7 @@ download_pdfs <- function(year, county_table, file_name_base_template) {
 # Conversion using tabulizer. This is the best case scenario.
 # The output is a csv file.
 convert_pdfs_tabulizer <- function(files) {
-  walk(files, tabulizer::extract_tables,
+  walk(files, tabulapdf::extract_tables,
        output = "csv", outdir = "data-raw")
 }
 
@@ -164,7 +164,7 @@ parse_pdf_raw_ <- function(pdf_raw) {
     mutate(across(where(is.character), str_trim)) |>
     rename(MUNICIPALITIES = col_1) |>
     filter(MUNICIPALITIES != "MUNICIPALITIES") |>
-    mutate(across(starts_with("col_"), str_remove, ",")) |>
+    mutate(across(starts_with("col_"), \(x) str_remove(x, ","))) |>
     mutate(across(starts_with("col_"), ~ if_else(.x == "", "0", .x))) |>
     mutate(across(starts_with("col_"), as.integer.or.na_)) |>
     select(-id)
@@ -184,9 +184,15 @@ assign_column_names_ <- function(tbl, candidate_table) {
       ) |>
     select(col_name, new_col_name) |>
     deframe()
-  tbl |>
-    select(MUNICIPALITIES, num_range("col_", 2:(1 + length(column_names)))) |>
-    rename_with(~column_names, .cols = starts_with("col_"))
+  tbl <- tbl |> select(MUNICIPALITIES, num_range("col_", 2:(1 + length(column_names))))
+  tryCatch(
+    expr = {
+      tbl |>
+        rename_with(~column_names, .cols = starts_with("col_"))
+    },
+    error = function(e){ tbl }
+  )
+
 }
 
 # Convert the files using pdftools. The end-result should be
@@ -309,13 +315,17 @@ read_from_csv <- function(year, county_table,
     map(~ fs::path("data-raw", .))
 
   names(csv_files) <- county
-  csv_files |>
+
+  results <- csv_files |>
     map(function(x) {x |>
         map(readr::read_csv, show_col_types = FALSE) |>
         map(repair_columns_, column_repair_table) |>
         reduce(bind_rows)
     }) |>
-    bind_rows(.id = "county") |>
+    bind_rows(.id = "county")
+
+  results |>
+    mutate(across(3:length(results), as.numeric)) |>
     pivot_longer(cols = c(-county, -MUNICIPALITIES),
                  names_to = "candidate",
                  values_to = "vote") |>
@@ -344,6 +354,9 @@ repair_municipalities <- function(table, additional_corrections = NULL) {
     filter(municipality != "Federal Oversees") |>
     filter(municipality != "Federal Overseas") |>
     filter(municipality != "Federal/Overseas") |>
+    filter(municipality != "Federal") |>
+    filter(municipality != "Overseas") |>
+    filter(municipality != "Hand Counts") |>
     filter(municipality != "Late Provisionals") |>
     filter(!str_detect(municipality, "NJDOE")) |>
     filter(!str_detect(municipality, "Based on additional")) |>
@@ -496,7 +509,8 @@ go <- function(election, year, office, county_table, candidate_table,
     column_repair_table) |>
     mutate(vote = as.integer(vote), year = as.integer(year)) |>
     repair_municipalities(additional_municipal_corrections) |>
-    repair_votes(vote_corrections)
+    repair_votes(vote_corrections) |>
+    filter(!str_starts(candidate, "\\.\\.\\."))
 
   results <- results |>
     mutate(year = year, type = "General", office = office) |>
