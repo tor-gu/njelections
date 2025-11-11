@@ -29,3 +29,10 @@ election_by_municipality <- go(
   additional_data, additional_municipal_corrections,
   vote_corrections, tabulizer = TRUE)
 
+# Manually normalize name of Gloria Estela La Riva
+# (La Riva ran in 2008 and 2016 as Gloria La Riva)
+election_by_municipality <- election_by_municipality |>
+  mutate(candidate = if_else(
+    year == 2020 & office == "President" & str_detect(candidate, "La Riva"),
+    'Gloria La Riva', candidate
+  ))

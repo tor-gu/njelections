@@ -54,6 +54,7 @@ candidates <- election_by_municipality |>
     year == 2012 & candidate == "Ross C. (Rocky) Anderson" ~ "ANDERSON",
     year == 2016 & candidate == 'Roque "Rocky" De la Fuente' ~ "FUENTE",
     year == 2020 & candidate == 'Roque "Rocky" De la Fuente' ~ "FUENTE",
+    year == 2020 & candidate == 'Gloria La Riva' ~ "LA RIVA",
     year %in% 2012:2024 ~ str_to_upper(search_name),
     TRUE ~ search_name
   ))
