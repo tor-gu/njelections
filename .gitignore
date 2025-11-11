@@ -5,3 +5,4 @@
 .DS_Store
 data-raw/*.pdf
 data-raw/*.csv
+sandbox*.R
