@@ -9,7 +9,7 @@
 <!-- badges: end -->
 
 This is a data package for R containing the results of statewide
-elections in NJ, from 2004 to 2021.
+elections in NJ, from 2004 to 2024.
 
 ## Installation
 
@@ -25,124 +25,199 @@ devtools::install_github("tor-gu/njelections")
 This package contains the results of statewide general elections for
 three offices:
 
--   New Jersey Governor
--   US Senate
--   US President
+- New Jersey Governor
+- US Senate
+- US President
 
-All elections from 2004 to 2021 are included, at three levels of
+All elections from 2004 to 2024 are included, at three levels of
 organization:
 
--   Statewide (`election_statewide`)
--   By county (`election_by_county`)
--   By municipality (`election_by_municipality`)
+- Statewide (`election_statewide`)
+- By county (`election_by_county`)
+- By municipality (`election_by_municipality`)
 
 #### Table `election_statewide`
 
 Table `election_statewide` contains the following columns, which are
 common to all tables in this dataset:
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:left;">
+
 Field
 </th>
+
 <th style="text-align:left;">
+
 Type
 </th>
+
 <th style="text-align:left;">
+
 Description
 </th>
+
 <th style="text-align:left;">
+
 Example
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:left;">
+
 year
 </td>
+
 <td style="text-align:left;">
+
 int
 </td>
+
 <td style="text-align:left;">
+
 Election year
 </td>
+
 <td style="text-align:left;">
+
 2004
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 type
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 Currently always ‘General’
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 office
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 ‘President’, ‘Senate’, or ‘Governor’
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 candidate
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 Candidate name
 </td>
+
 <td style="text-align:left;">
+
 John F. Kerry
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 party
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 Candidate party
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 vote
 </td>
+
 <td style="text-align:left;">
+
 int
 </td>
+
 <td style="text-align:left;">
+
 Number of votes received
 </td>
+
 <td style="text-align:left;">
+
 1911430
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 There is one row in this table for every `year`, `office`, and
@@ -151,90 +226,151 @@ There is one row in this table for every `year`, `office`, and
 ##### Example
 
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:right;">
+
 year
 </th>
+
 <th style="text-align:left;">
+
 type
 </th>
+
 <th style="text-align:left;">
+
 office
 </th>
+
 <th style="text-align:left;">
+
 candidate
 </th>
+
 <th style="text-align:left;">
+
 party
 </th>
+
 <th style="text-align:right;">
+
 vote
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 John F. Kerry
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 1911430
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 George W. Bush
 </td>
+
 <td style="text-align:left;">
+
 Republican
 </td>
+
 <td style="text-align:right;">
+
 1670003
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 Ralph Nader
 </td>
+
 <td style="text-align:left;">
+
 Independent
 </td>
+
 <td style="text-align:right;">
+
 19418
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 #### Table `election_by_county`
@@ -242,52 +378,87 @@ Independent
 Table `election_by_county` contains all of the columns in
 `election_statewide`, plus two more:
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:left;">
+
 Field
 </th>
+
 <th style="text-align:left;">
+
 Type
 </th>
+
 <th style="text-align:left;">
+
 Description
 </th>
+
 <th style="text-align:left;">
+
 Example
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:left;">
+
 GEOID
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 US Census GEOID for the county
 </td>
+
 <td style="text-align:left;">
+
 34001
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 county
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 County name
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 There is one row in this table for every `year`, `office`, `county` and
@@ -297,114 +468,191 @@ every `candidate` is represented in every `county`.
 ##### Example
 
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:right;">
+
 year
 </th>
+
 <th style="text-align:left;">
+
 type
 </th>
+
 <th style="text-align:left;">
+
 office
 </th>
+
 <th style="text-align:left;">
+
 GEOID
 </th>
+
 <th style="text-align:left;">
+
 county
 </th>
+
 <th style="text-align:left;">
+
 candidate
 </th>
+
 <th style="text-align:left;">
+
 party
 </th>
+
 <th style="text-align:right;">
+
 vote
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 34001
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 John F. Kerry
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 55746
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 34003
 </td>
+
 <td style="text-align:left;">
+
 Bergen County
 </td>
+
 <td style="text-align:left;">
+
 John F. Kerry
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 207666
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 34005
 </td>
+
 <td style="text-align:left;">
+
 Burlington County
 </td>
+
 <td style="text-align:left;">
+
 John F. Kerry
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 110411
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 #### Table `election_by_municipality`
@@ -412,66 +660,111 @@ Democratic
 Table `election_by_municipality` contains all of the columns in
 `election_statewide`, plus three more:
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:left;">
+
 Field
 </th>
+
 <th style="text-align:left;">
+
 Type
 </th>
+
 <th style="text-align:left;">
+
 Description
 </th>
+
 <th style="text-align:left;">
+
 Example
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:left;">
+
 GEOID
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 US Census GEOID for the municipality
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 county
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 County name
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 municipality
 </td>
+
 <td style="text-align:left;">
+
 chr
 </td>
+
 <td style="text-align:left;">
+
 Municipality name
 </td>
+
 <td style="text-align:left;">
+
 Absecon city
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 There is one row in this table for every `year`, `office`, `county`,
@@ -482,126 +775,211 @@ There is one row in this table for every `year`, `office`, `county`,
 ##### Example
 
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:right;">
+
 year
 </th>
+
 <th style="text-align:left;">
+
 type
 </th>
+
 <th style="text-align:left;">
+
 office
 </th>
+
 <th style="text-align:left;">
+
 GEOID
 </th>
+
 <th style="text-align:left;">
+
 county
 </th>
+
 <th style="text-align:left;">
+
 municipality
 </th>
+
 <th style="text-align:left;">
+
 candidate
 </th>
+
 <th style="text-align:left;">
+
 party
 </th>
+
 <th style="text-align:right;">
+
 vote
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Absecon city
 </td>
+
 <td style="text-align:left;">
+
 John F. Kerry
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 1800
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Absecon city
 </td>
+
 <td style="text-align:left;">
+
 George W. Bush
 </td>
+
 <td style="text-align:left;">
+
 Republican
 </td>
+
 <td style="text-align:right;">
+
 2177
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 General
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Absecon city
 </td>
+
 <td style="text-align:left;">
+
 Ralph Nader
 </td>
+
 <td style="text-align:left;">
+
 Independent
 </td>
+
 <td style="text-align:right;">
+
 25
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 ## Notes
@@ -616,15 +994,16 @@ archive](https://nj.gov/state/elections/election-information-results.shtml).
 ### NJ municipalities
 
 New Jersey municipalities have not been stable over the course of
-2004-2021:
+2004-202:
 
--   Several municipalities have changed names or been assigned new
-    GEOIDs by the US Census.
--   In 2013, Princeton borough and Princeton township merged
+- Several municipalities have changed names or been assigned new GEOIDs
+  by the US Census.
+- In 2013, Princeton borough and Princeton township merged
+- In 2022, Pine Valley was absorbed by Pine Hill
 
 The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities)
 package contains municipality names and GEOIDs across the period
-2001-2021. The `election_by_municipality` table uses the names and
+2001-2024. The `election_by_municipality` table uses the names and
 GEOIDs from the `njmunicipalities` package for the year of the election,
 with the [exception of the Princetons](#princeton-and-the-2012-election)
 for the 2012 election. See [Accounting for changing municipal
@@ -710,278 +1089,466 @@ hudson_senate_2012 <- election_by_municipality |>
 ```
 
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:left;">
+
 GEOID
 </th>
+
 <th style="text-align:left;">
+
 municipality
 </th>
+
 <th style="text-align:right;">
+
 Democratic
 </th>
+
 <th style="text-align:right;">
+
 Republican
 </th>
+
 <th style="text-align:right;">
+
 Libertarian
 </th>
+
 <th style="text-align:right;">
+
 Green
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401703580
 </td>
+
 <td style="text-align:left;">
+
 Bayonne city
 </td>
+
 <td style="text-align:right;">
+
 12735
 </td>
+
 <td style="text-align:right;">
+
 5067
 </td>
+
 <td style="text-align:right;">
+
 98
 </td>
+
 <td style="text-align:right;">
+
 166
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401719360
 </td>
+
 <td style="text-align:left;">
+
 East Newark borough
 </td>
+
 <td style="text-align:right;">
+
 356
 </td>
+
 <td style="text-align:right;">
+
 59
 </td>
+
 <td style="text-align:right;">
+
 2
 </td>
+
 <td style="text-align:right;">
+
 1
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401728650
 </td>
+
 <td style="text-align:left;">
+
 Guttenberg town
 </td>
+
 <td style="text-align:right;">
+
 2366
 </td>
+
 <td style="text-align:right;">
+
 500
 </td>
+
 <td style="text-align:right;">
+
 20
 </td>
+
 <td style="text-align:right;">
+
 18
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401730210
 </td>
+
 <td style="text-align:left;">
+
 Harrison town
 </td>
+
 <td style="text-align:right;">
+
 2458
 </td>
+
 <td style="text-align:right;">
+
 520
 </td>
+
 <td style="text-align:right;">
+
 22
 </td>
+
 <td style="text-align:right;">
+
 31
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401732250
 </td>
+
 <td style="text-align:left;">
+
 Hoboken city
 </td>
+
 <td style="text-align:right;">
+
 12819
 </td>
+
 <td style="text-align:right;">
+
 5695
 </td>
+
 <td style="text-align:right;">
+
 210
 </td>
+
 <td style="text-align:right;">
+
 184
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401736000
 </td>
+
 <td style="text-align:left;">
+
 Jersey City city
 </td>
+
 <td style="text-align:right;">
+
 56469
 </td>
+
 <td style="text-align:right;">
+
 8077
 </td>
+
 <td style="text-align:right;">
+
 414
 </td>
+
 <td style="text-align:right;">
+
 565
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401736510
 </td>
+
 <td style="text-align:left;">
+
 Kearny town
 </td>
+
 <td style="text-align:right;">
+
 6706
 </td>
+
 <td style="text-align:right;">
+
 2559
 </td>
+
 <td style="text-align:right;">
+
 52
 </td>
+
 <td style="text-align:right;">
+
 93
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401752470
 </td>
+
 <td style="text-align:left;">
+
 North Bergen township
 </td>
+
 <td style="text-align:right;">
+
 15187
 </td>
+
 <td style="text-align:right;">
+
 3196
 </td>
+
 <td style="text-align:right;">
+
 54
 </td>
+
 <td style="text-align:right;">
+
 100
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401766570
 </td>
+
 <td style="text-align:left;">
+
 Secaucus town
 </td>
+
 <td style="text-align:right;">
+
 3940
 </td>
+
 <td style="text-align:right;">
+
 1942
 </td>
+
 <td style="text-align:right;">
+
 21
 </td>
+
 <td style="text-align:right;">
+
 37
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401774630
 </td>
+
 <td style="text-align:left;">
+
 Union City city
 </td>
+
 <td style="text-align:right;">
+
 14094
 </td>
+
 <td style="text-align:right;">
+
 2169
 </td>
+
 <td style="text-align:right;">
+
 56
 </td>
+
 <td style="text-align:right;">
+
 79
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401777930
 </td>
+
 <td style="text-align:left;">
+
 Weehawken township
 </td>
+
 <td style="text-align:right;">
+
 3429
 </td>
+
 <td style="text-align:right;">
+
 915
 </td>
+
 <td style="text-align:right;">
+
 41
 </td>
+
 <td style="text-align:right;">
+
 55
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 3401779610
 </td>
+
 <td style="text-align:left;">
+
 West New York town
 </td>
+
 <td style="text-align:right;">
+
 9166
 </td>
+
 <td style="text-align:right;">
+
 2139
 </td>
+
 <td style="text-align:right;">
+
 26
 </td>
+
 <td style="text-align:right;">
+
 60
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 ### Accounting for changing municipal names
 
-Over the period 2004-2021, several municipalities changed names and
-GEOIDs, and Princeton township was merged into Princeton borough. The
-package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities)
-is helpful here.
+Over the period 2004-2024, several municipalities changed names and
+GEOIDs, Princeton township was merged into Princeton borough, and Pine
+Valley was merged into Pine Hill. The package
+[`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) is
+helpful here.
 
 As an example, let consider Mercer county, which includes the merged
 Princetons, as well as Robbinsville township, previously known as
@@ -990,125 +1557,202 @@ municipality in Mercer, using the current name for each municipality,
 and combining the totals for the Princetons in the years prior to the
 merger.
 
-First, generate a cross reference table for the GEOIDs, using the 2021
+First, generate a cross reference table for the GEOIDs, using the 2024
 GEOIDs and municipality names as the reference. We use
 `njmunicipalities::get_geoid_cross_reference` and
 `njmunicipalities::get_municipalities` for this.
 
 ``` r
 library(njmunicipalities)
-geoid_xref <- get_geoid_cross_references(2021, 2004:2021) |>
+geoid_xref <- get_geoid_cross_references(2024, 2004:2024) |>
   dplyr::filter(!is.na(GEOID_ref)) |>
-  dplyr::left_join(get_municipalities(2021), by = c("GEOID_ref" = "GEOID"))
+  dplyr::left_join(get_municipalities(2024), by = c("GEOID_ref" = "GEOID"))
 ```
 
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:right;">
+
 year
 </th>
+
 <th style="text-align:left;">
+
 GEOID_ref
 </th>
+
 <th style="text-align:left;">
+
 GEOID
 </th>
+
 <th style="text-align:left;">
+
 county
 </th>
+
 <th style="text-align:left;">
+
 municipality
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Absecon city
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 3400102080
 </td>
+
 <td style="text-align:left;">
+
 3400102080
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Atlantic City city
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 3400107810
 </td>
+
 <td style="text-align:left;">
+
 3400107810
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Brigantine city
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 3400108680
 </td>
+
 <td style="text-align:left;">
+
 3400108680
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Buena borough
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 3400108710
 </td>
+
 <td style="text-align:left;">
+
 3400108710
 </td>
+
 <td style="text-align:left;">
+
 Atlantic County
 </td>
+
 <td style="text-align:left;">
+
 Buena Vista township
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 Now, generate the two-party share of the vote, combining Princeton
@@ -1124,117 +1768,193 @@ tpsov <- njelections::election_by_municipality |>
   dplyr::summarize(vote = sum(vote), .groups = "drop") |>
   dplyr::filter(party %in% c("Democratic", "Republican")) |>
   dplyr::group_by(year, office, GEOID) |>
-  dplyr::summarize(party = party, 
-                   two_party_share_of_vote = vote/sum(vote), .groups="drop")
+  dplyr::reframe(party = party, two_party_share_of_vote = vote/sum(vote))
 ```
 
 <table class="kable">
+
 <thead>
+
 <tr>
+
 <th style="text-align:right;">
+
 year
 </th>
+
 <th style="text-align:left;">
+
 office
 </th>
+
 <th style="text-align:left;">
+
 GEOID
 </th>
+
 <th style="text-align:left;">
+
 party
 </th>
+
 <th style="text-align:right;">
+
 two_party_share_of_vote
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 0.4526025
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400100100
 </td>
+
 <td style="text-align:left;">
+
 Republican
 </td>
+
 <td style="text-align:right;">
+
 0.5473975
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400102080
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 0.7595311
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400102080
 </td>
+
 <td style="text-align:left;">
+
 Republican
 </td>
+
 <td style="text-align:right;">
+
 0.2404689
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:right;">
+
 2004
 </td>
+
 <td style="text-align:left;">
+
 President
 </td>
+
 <td style="text-align:left;">
+
 3400107810
 </td>
+
 <td style="text-align:left;">
+
 Democratic
 </td>
+
 <td style="text-align:right;">
+
 0.4536190
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 Finally, combine the two tables and plot.

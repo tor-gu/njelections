@@ -14,7 +14,9 @@ knitr::opts_chunk$set(
 renv::use(
   "tor-gu/njmunicipalities",
   "tor-gu/njelections",
-  "ggplot2"
+  "ggplot2",
+  "kableExtra",
+  "tidyr"
 )
 ```
 ```{r echo=FALSE, message=FALSE}
@@ -33,7 +35,7 @@ kbl <- function(tbl, caption) {
 [![R-CMD-check](https://github.com/tor-gu/njelections/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tor-gu/njelections/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This is a data package for R containing the results of statewide elections in NJ, from 2004 to 2021.
+This is a data package for R containing the results of statewide elections in NJ, from 2004 to 2024.
 
 ## Installation
 
@@ -50,7 +52,7 @@ This package contains the results of statewide general elections for three offic
 * US Senate
 * US President
 
-All elections from 2004 to 2021 are included, at three levels of organization:
+All elections from 2004 to 2024 are included, at three levels of organization:
 
 * Statewide (`election_statewide`)
 * By county (`election_by_county`)
@@ -118,12 +120,13 @@ head(election_by_municipality, 3) |> kbl("head(election_by_municipality, 3)")
 The source for this data is the [New Jersey Division of Elections](https://nj.gov/state/elections/index.shtml). The data was derived by scraping the PDFs in the [election results archive](https://nj.gov/state/elections/election-information-results.shtml).
 
 ### NJ municipalities
-New Jersey municipalities have not been stable over the course of 2004-2021:
+New Jersey municipalities have not been stable over the course of 2004-202:
 
 * Several municipalities have changed names or been assigned new GEOIDs by the US Census. 
 * In 2013, Princeton borough and Princeton township merged
+* In 2022, Pine Valley was absorbed by Pine Hill
 
-The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) package contains municipality names and GEOIDs across the period 2001-2021. The `election_by_municipality` table uses the names and GEOIDs from the `njmunicipalities` package for the year of the election, with the [exception of the Princetons](#princeton-and-the-2012-election) for the 2012 election.  See [Accounting for changing municipal names](#accounting-for-changing-municipal-names) for a worked example dealing with these issues.
+The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) package contains municipality names and GEOIDs across the period 2001-2024. The `election_by_municipality` table uses the names and GEOIDs from the `njmunicipalities` package for the year of the election, with the [exception of the Princetons](#princeton-and-the-2012-election) for the 2012 election.  See [Accounting for changing municipal names](#accounting-for-changing-municipal-names) for a worked example dealing with these issues.
 
 #### Princeton and the 2012 election
 At the time of the 2012 election, Princeton borough and Princeton township were still separate municipalities. However, the official results for Mercer County provide only the combined results for the merged Princeton municipalities. 
@@ -179,17 +182,16 @@ hudson_senate_2012 |> kbl("Hudson County 2012 Senate results")
 ```
 
 ### Accounting for changing municipal names
-Over the period 2004-2021, several municipalities changed names and GEOIDs, and
-Princeton township was merged into Princeton borough.  The package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) is helpful here.  
+Over the period 2004-2024, several municipalities changed names and GEOIDs, Princeton township was merged into Princeton borough, and Pine Valley was merged into Pine Hill.  The package [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) is helpful here.  
 
 As an example, let consider Mercer county, which includes the merged Princetons, as well as Robbinsville township, previously known as Washington township. Let's plot the two-party share of votes for each municipality in Mercer, using the current name for each municipality, and combining the totals for the Princetons in the years prior to the merger.
 
-First, generate a cross reference table for the GEOIDs, using the 2021 GEOIDs and municipality names as the reference.  We use `njmunicipalities::get_geoid_cross_reference` and `njmunicipalities::get_municipalities` for this.
+First, generate a cross reference table for the GEOIDs, using the 2024 GEOIDs and municipality names as the reference.  We use `njmunicipalities::get_geoid_cross_reference` and `njmunicipalities::get_municipalities` for this.
 ```{r}
 library(njmunicipalities)
-geoid_xref <- get_geoid_cross_references(2021, 2004:2021) |>
+geoid_xref <- get_geoid_cross_references(2024, 2004:2024) |>
   dplyr::filter(!is.na(GEOID_ref)) |>
-  dplyr::left_join(get_municipalities(2021), by = c("GEOID_ref" = "GEOID"))
+  dplyr::left_join(get_municipalities(2024), by = c("GEOID_ref" = "GEOID"))
 ```
 ```{r echo=FALSE}
 geoid_xref |> head(5) |> kbl("geoid_xref")
@@ -205,8 +207,7 @@ tpsov <- njelections::election_by_municipality |>
   dplyr::summarize(vote = sum(vote), .groups = "drop") |>
   dplyr::filter(party %in% c("Democratic", "Republican")) |>
   dplyr::group_by(year, office, GEOID) |>
-  dplyr::summarize(party = party, 
-                   two_party_share_of_vote = vote/sum(vote), .groups="drop")
+  dplyr::reframe(party = party, two_party_share_of_vote = vote/sum(vote))
 ```
 ```{r echo=FALSE}
 tpsov |> head(5) |> kbl("tpsov")
