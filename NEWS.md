@@ -1,3 +1,7 @@
+# njelections 1.2.0
+
+* Added 2025 elections.
+
 # njelections 1.1.0
 
 * Added 2024 elections.

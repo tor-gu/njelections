@@ -9,7 +9,7 @@
 <!-- badges: end -->
 
 This is a data package for R containing the results of statewide
-elections in NJ, from 2004 to 2024.
+elections in NJ, from 2004 to 2025.
 
 ## Installation
 
@@ -29,7 +29,7 @@ three offices:
 - US Senate
 - US President
 
-All elections from 2004 to 2024 are included, at three levels of
+All elections from 2004 to 2054 are included, at three levels of
 organization:
 
 - Statewide (`election_statewide`)
@@ -994,7 +994,7 @@ archive](https://nj.gov/state/elections/election-information-results.shtml).
 ### NJ municipalities
 
 New Jersey municipalities have not been stable over the course of
-2004-202:
+2004-2025:
 
 - Several municipalities have changed names or been assigned new GEOIDs
   by the US Census.
@@ -1003,7 +1003,7 @@ New Jersey municipalities have not been stable over the course of
 
 The [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities)
 package contains municipality names and GEOIDs across the period
-2001-2024. The `election_by_municipality` table uses the names and
+2001-2025. The `election_by_municipality` table uses the names and
 GEOIDs from the `njmunicipalities` package for the year of the election,
 with the [exception of the Princetons](#princeton-and-the-2012-election)
 for the 2012 election. See [Accounting for changing municipal
@@ -1544,7 +1544,7 @@ West New York town
 
 ### Accounting for changing municipal names
 
-Over the period 2004-2024, several municipalities changed names and
+Over the period 2004-2025, several municipalities changed names and
 GEOIDs, Princeton township was merged into Princeton borough, and Pine
 Valley was merged into Pine Hill. The package
 [`njmunicipalities`](https://github.com/tor-gu/njmunicipalities) is
@@ -1557,16 +1557,16 @@ municipality in Mercer, using the current name for each municipality,
 and combining the totals for the Princetons in the years prior to the
 merger.
 
-First, generate a cross reference table for the GEOIDs, using the 2024
+First, generate a cross reference table for the GEOIDs, using the 2025
 GEOIDs and municipality names as the reference. We use
 `njmunicipalities::get_geoid_cross_reference` and
 `njmunicipalities::get_municipalities` for this.
 
 ``` r
 library(njmunicipalities)
-geoid_xref <- get_geoid_cross_references(2024, 2004:2024) |>
+geoid_xref <- get_geoid_cross_references(2025, 2004:2025) |>
   dplyr::filter(!is.na(GEOID_ref)) |>
-  dplyr::left_join(get_municipalities(2024), by = c("GEOID_ref" = "GEOID"))
+  dplyr::left_join(get_municipalities(2025), by = c("GEOID_ref" = "GEOID"))
 ```
 
 <table class="kable">
@@ -1968,11 +1968,11 @@ tpsov |>
   scale_color_manual(values = c("Democratic" = "blue", "Republican" = "red")) +
   geom_point() + 
   geom_smooth(se = FALSE, formula = y ~ x, method = "loess") + 
-  facet_wrap("municipality") +
+  facet_wrap("municipality", nrow=4) +
   ylab("Two party share of vote") +
   xlab("Election year") +
   labs(title = "Mercer County, NJ, two party share of vote",
-       subtitle = "US Senate, President and Governor races, 2004-2021")
+       subtitle = "US Senate, President and Governor races, 2004-2025")
 ```
 
 <img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />

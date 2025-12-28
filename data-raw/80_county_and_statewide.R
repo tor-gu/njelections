@@ -22,6 +22,7 @@ file_names <- tribble(
   2021,  "Governor",  "2021-official-general-results-governor.pdf",
   2024,  "President", "2024-official-general-results-president.pdf",
   2024,  "Senate",    "2024-official-general-results-us-senate.pdf",
+  2025,  "Governor",  "2025-official-general-results-governor.pdf",
 )
 
 url_pattern <- "https://nj.gov/state/elections/assets/pdf/election-results/{year}/{file_name}"
@@ -55,7 +56,8 @@ candidates <- election_by_municipality |>
     year == 2016 & candidate == 'Roque "Rocky" De la Fuente' ~ "FUENTE",
     year == 2020 & candidate == 'Roque "Rocky" De la Fuente' ~ "FUENTE",
     year == 2020 & candidate == 'Gloria La Riva' ~ "LA RIVA",
-    year %in% 2012:2024 ~ str_to_upper(search_name),
+    year == 2025 & candidate == 'Joanne Kuniansky' ~ "KUNIANSKY",
+    year %in% 2012:2025 ~ str_to_upper(search_name),
     TRUE ~ search_name
   ))
 

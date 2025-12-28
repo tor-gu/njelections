@@ -49,6 +49,7 @@ common_municipality_corrections_ <- tribble(
   "Hudson County",     "North Bergen town",      "North Bergen township",
   "Hudson County",     "Union city",             "Union City city",
   "Mercer County",     "Twp. of Robbinsville",   "Robbinsville township",
+  "Mercer County",     "East Windsor",           "East Windsor township",
   "Middlesex County",  "New Brunswick township", "New Brunswick city",
   "Middlesex County",  "Sayerville borough",     "Sayreville borough",
   "Monmouth County",   "Lake Como",              "Lake Como borough",
