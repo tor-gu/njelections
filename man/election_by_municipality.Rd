@@ -5,7 +5,7 @@
 \alias{election_by_municipality}
 \title{Election results by municipality}
 \format{
-A data fram with 76,332 rows and 9 columns
+A data frame with 87,048 rows and 9 columns
 \describe{
   \item{year}{Election year}
   \item{type}{"General" or "Primary". (Currently all rows are "General")}

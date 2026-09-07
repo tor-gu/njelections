@@ -1,3 +1,9 @@
+# njelections 1.2.1
+
+* Cleanup in preparation for the 2026 electins.
+
+* Minor documentation fixes -- no changes to the data.
+
 # njelections 1.2.0
 
 * Added 2025 elections.

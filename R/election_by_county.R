@@ -1,6 +1,6 @@
 #' Election results by county
 #'
-#' @format A data frame with 2,835 rows and 8 columns
+#' @format A data frame with 3,234 rows and 8 columns
 #' \describe{
 #'   \item{year}{Election year}
 #'   \item{type}{"General" or "Primary". (Currently all rows are "General")}

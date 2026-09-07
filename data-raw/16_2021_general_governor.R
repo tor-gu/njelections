@@ -26,13 +26,14 @@ file_name_base_template <- "{year}-general-election-results-governor-{county}"
 
 additional_data <- NULL
 additional_municipal_corrections <- NULL
+vote_corrections <- NULL
 
 # Go ---
 county_table <- get_county_table(county_table_updates)
 
 election_by_municipality <- go(
   election_by_municipality, year, office, county_table,
-  candidate_table, file_name_base_template, pdf_files,
+  candidate_table, file_name_base_template,
   additional_data, additional_municipal_corrections,
   vote_corrections)
 

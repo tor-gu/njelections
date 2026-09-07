@@ -52,7 +52,7 @@ This package contains the results of statewide general elections for three offic
 * US Senate
 * US President
 
-All elections from 2004 to 2054 are included, at three levels of organization:
+All elections from 2004 to 2025 are included, at three levels of organization:
 
 * Statewide (`election_statewide`)
 * By county (`election_by_county`)

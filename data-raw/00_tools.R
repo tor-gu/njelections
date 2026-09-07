@@ -483,9 +483,9 @@ order_candidates <- function(candidate_table, county_table, order_dir) {
 # * Read the CSV and do post-processing
 # * Update the election table and return the updated table.
 go <- function(election, year, office, county_table, candidate_table,
-               file_name_base_template, pdf_files,
+               file_name_base_template,
                additional_data, additional_municipal_corrections,
-               vote_corrections = null, municipality_year = year,
+               vote_corrections = NULL, municipality_year = year,
                tabulizer = FALSE) {
   pdf_files <- download_pdfs(year,
                              county_table,

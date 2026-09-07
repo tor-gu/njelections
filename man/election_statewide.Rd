@@ -5,7 +5,7 @@
 \alias{election_statewide}
 \title{Statewide election results.}
 \format{
-A data frame with 135 rows and 6 columns
+A data frame with 154 rows and 6 columns
 \describe{
   \item{year}{Election year}
   \item{type}{"General" or "Primary". (Currently all rows are "General")}
